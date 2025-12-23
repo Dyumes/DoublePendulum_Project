@@ -6,7 +6,7 @@
 
 include("accelerations.jl")
 
-function doublePendulumSim(m1, m2, l1, l2, tmax)
+function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
 
     #----PARAMETERS INITIALISATIONS
     #masses
@@ -33,8 +33,8 @@ function doublePendulumSim(m1, m2, l1, l2, tmax)
     ts = []
 
     #----INITIAL CONDITIONS
-    θ1 = pi+0.1#pi + 0.0204516 # #angle of the first pendulum
-    θ2 = pi+0.2#pi + 0.0934567##angle of the second pendulum
+    θ1 = θ1#pi + 0.0204516 # #angle of the first pendulum
+    θ2 = θ2#pi + 0.0934567##angle of the second pendulum
 
     w1 = 0.0 #angular velocity of the first pendulum = dθ1/dt
     w2 = 0.0 #angular velocity of the second pendulum = dθ2/dt
@@ -77,8 +77,9 @@ function doublePendulumSim(m1, m2, l1, l2, tmax)
         t+= dt
     end
 
-    return ts, θ1s, θ2s, x1s, y1s, x2s, y2s
+    #print(length(ts))
 
+    return ts, θ1s, θ2s, x1s, y1s, x2s, y2s
 
 
 end

@@ -10,7 +10,7 @@ include("doublePendulum_v1.jl")
 
 println("Simulation...")
 
-function animation_double_pendulum(m1, m2, l1, l2, fps, frame_step, tmax)
+function animation_double_pendulum(m1, m2, l1, l2, fps, frame_step, tmax, θ1, θ2)
     #masses
     m1 = m1
     m2 = m2
@@ -18,7 +18,11 @@ function animation_double_pendulum(m1, m2, l1, l2, fps, frame_step, tmax)
     #rode
     l1 = l1
     l2 = l2
-    ts, θ1s, θ2s, x1s, y1s, x2s, y2s = doublePendulumSim(m1, m2, l1, l2, tmax)
+
+    θ1 = θ1
+    θ2 = θ2
+
+    ts, θ1s, θ2s, x1s, y1s, x2s, y2s = doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
 
     #Frames parameters
     fps = fps
@@ -93,5 +97,7 @@ function animation_double_pendulum(m1, m2, l1, l2, fps, frame_step, tmax)
     end
 
     println("Animation saved")
+
+    return θ1s, θ2s
 
 end

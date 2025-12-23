@@ -12,13 +12,13 @@ using Colors
 using ImageMorphology
 using Statistics
 
-function video_analysis_and_animation(video_path::String)
+function video_analysis_and_animation(video_path::String, nbrOfFrames)
 
     video = VideoIO.openvideo(video_path)
     frames = []
 
     #Nbr of frames of the video = 200
-    nbrOfFrames = 200
+    nbrOfFrames = nbrOfFrames
 
     #List all the frames in an array
     try
@@ -352,5 +352,20 @@ function video_analysis_and_animation(video_path::String)
 
     println("interactive vizualition ready.")
 
-    return m1_positions, m2_positions, centre, l1, l2
+    theta1s = []
+    theta2s = []
+
+    for i in 1:length(m1_positions)
+        dx1 = m1_positions[i][1] - centre[1]
+        dy1 = m1_positions[i][2] - centre[2]
+        θ1 = atan(dy1, dx1) + pi/2
+        push!(theta1s, θ1)
+
+        dx2 = m2_positions[i][1] - m1_positions[i][1]
+        dy2 = m2_positions[i][2] - m1_positions[i][2]
+        θ2 = atan(dy2, dx2) + pi/2
+        push!(theta2s, θ2)
+    end
+
+    return m1_positions, m2_positions, centre, l1, l2, theta1s, theta2s
 end
