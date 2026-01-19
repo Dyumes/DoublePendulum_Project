@@ -493,7 +493,7 @@ function optimize_double_pendulum(fileName, debugMode = false)
         cache_file, 
         "comparison_tracking_vs_simulation.mp4", 
         30, 
-        nbrOfFrames
+        nbrOfFrames, debugMode
     )
     
     if debugMode

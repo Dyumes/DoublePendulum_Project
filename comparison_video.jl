@@ -8,22 +8,22 @@ using JLD2
 
 include("doublePendulum_v1.jl")
 
-function create_comparison_video(best_params, video_cache_file="video_data_cache.jld2", output_file="comparison_tracking_vs_simulation.mp4", fps=30, nbrOfFrames=200)
+function create_comparison_video(best_params, video_cache_file="video_data_cache.jld2", output_file="comparison_tracking_vs_simulation.mp4", fps=30, nbrOfFrames=200, debugMode=false)
     
-    println("\n" * "="^60)
+    println("\n" * "-"^60)
     println("CREATING COMPARISON VIDEO")
-    println("="^60)
+    println("-"^60)
     
     # Load video data from cache
     if !isfile(video_cache_file)
-        error("Cache file not found! Please run the video analysis first.")
+        error("Cache file not found: Please run the video analysis first.")
     end
     
     println("\nLoading video data from cache...")
     @load video_cache_file frames m1_Vidpos m2_Vidpos center l1 l2 θ1s_vid θ2s_vid
     l1_pixels = l1
     l2_pixels = l2
-    println("Video data loaded successfully!")
+    println("Video data loaded successfully")
     
     # Real measurements for conversion
     l1_real_meters = 0.09174  # [m]
@@ -37,9 +37,12 @@ function create_comparison_video(best_params, video_cache_file="video_data_cache
     m2_vid_x = [(pos[1] - center[1]) * pixel_to_meter for pos in m2_Vidpos]
     m2_vid_y = [-(pos[2] - center[2]) * pixel_to_meter for pos in m2_Vidpos]  # Inverted
     
-    println("\nDEBUG - First 5 positions:")
-    println("Video m1: x=$(m1_vid_x[1:5]), y=$(m1_vid_y[1:5])")
-    println("Video m2: x=$(m2_vid_x[1:5]), y=$(m2_vid_y[1:5])")
+    if debugMode
+        println("\nDEBUG - First 5 positions:")
+        println("Video m1: x=$(m1_vid_x[1:5]), y=$(m1_vid_y[1:5])")
+        println("Video m2: x=$(m2_vid_x[1:5]), y=$(m2_vid_y[1:5])")
+    end
+    
     
     # Run simulation with best parameters
     println("\nRunning simulation with optimized parameters...")
@@ -53,15 +56,18 @@ function create_comparison_video(best_params, video_cache_file="video_data_cache
         best_params["θ1"], best_params["θ2"],
         best_params["w1"], best_params["w2"]
     )
-    println("Simulation completed!")
-    println("DEBUG - Simulation info:")
-    println("  Total sim points: $(length(x1s_sim))")
-    println("  Sim duration: $(ts_sim[end]) s")
-    println("  Sim dt: $dt_sim s")
-    println("  First 5 sim positions m1: x=$(x1s_sim[1:5]), y=$(y1s_sim[1:5])")
-    println("  Video frames: $nbrOfFrames")
-    println("  Video duration: $(nbrOfFrames/fps) s")
-    println("  Video fps: $fps")
+    println("Simulation completed")
+    if debugMode
+        println("DEBUG - Simulation info:")
+        println("  Total sim points: $(length(x1s_sim))")
+        println("  Sim duration: $(ts_sim[end]) s")
+        println("  Sim dt: $dt_sim s")
+        println("  First 5 sim positions m1: x=$(x1s_sim[1:5]), y=$(y1s_sim[1:5])")
+        println("  Video frames: $nbrOfFrames")
+        println("  Video duration: $(nbrOfFrames/fps) s")
+        println("  Video fps: $fps")
+    end
+    
     
     # Calculate limits for both plots
     max_len = max(best_params["l1"], best_params["l2"], l1_real_meters, l2_real_meters) * 2.2
@@ -176,12 +182,15 @@ function create_comparison_video(best_params, video_cache_file="video_data_cache
     # Calculate how many simulation steps per video frame
     steps_per_frame = round(Int, dt_video / dt_sim)
     
-    println("\nDEBUG - Timing:")
-    println("  dt_sim: $dt_sim s")
-    println("  dt_video: $dt_video s") 
-    println("  Steps per frame: $steps_per_frame")
-    println("  Frame 1 should be sim_idx 1")
-    println("  Frame 30 should be sim_idx $(30 * steps_per_frame)")
+    if debugMode
+        println("\nDEBUG - Timing:")
+        println("  dt_sim: $dt_sim s")
+        println("  dt_video: $dt_video s") 
+        println("  Steps per frame: $steps_per_frame")
+        println("  Frame 1 should be sim_idx 1")
+        println("  Frame 30 should be sim_idx $(30 * steps_per_frame)")
+    end
+
     
     # Pre-calculate simulation indices for each video frame
     sim_indices = [min(1 + (i-1) * steps_per_frame, length(x1s_sim)) for i in 1:nbrOfFrames]
@@ -255,10 +264,10 @@ function create_comparison_video(best_params, video_cache_file="video_data_cache
             end
         end
         
-        println("\n" * "="^60)
-        println("COMPARISON VIDEO CREATED SUCCESSFULLY!")
+        println("\n" * "-"^60)
+        println("COMPARISON VIDEO CREATED")
         println("Saved as: $output_file")
-        println("="^60)
+        println("-"^60)
         
     catch e
         println("\nError during video recording: $e")
