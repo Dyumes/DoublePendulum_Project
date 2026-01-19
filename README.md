@@ -70,6 +70,8 @@ This project simulates and optimizes a double pendulum using real video data.
 - Animation and comparison video generation
 **Output:** Optimized double pendulum parameters and comparative visualizations.
 
+![Double Pendulum Optimized](assets/doublePendulum_optimized.gif)
+
 
 
 
@@ -84,7 +86,7 @@ This project simulates and optimizes a double pendulum using real video data.
 - Video recording with error handling
 **Output:** Comparison video showing optimization quality.
 
-
+![Comparison tracking vs optimized](assets/comparison.gif)
 
 
 
