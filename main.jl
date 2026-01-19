@@ -73,7 +73,8 @@ pixel_to_meter = l1_real_meters / l1_pixels
 
 tmax_prediction = 2.0
 
-_,_,_,_,_,w1s, w2s = animation_double_pendulum(m1_opti, m2_opti, l1_real_meters, l2_real_meters, fps/3, n, tmax_prediction, θ1s_vid[end], θ2s_vid[end], ω1_final, ω2_final, "pendulePrediction.mp4", false)
+#prediction video to continue the video
+prediction = animation_double_pendulum(m1_opti, m2_opti, l1_real_meters, l2_real_meters, fps/3, n, tmax_prediction, θ1s_vid[end], θ2s_vid[end], ω1_final, ω2_final, "pendulePrediction.mp4", false)
 
 #THIRD PART IS TO CALCULATE THE ENERGIES OF THE DOUBLE PENDULUM SIMULATION
 g = 9.81
@@ -82,3 +83,6 @@ p1s = [[x1s_final[i], y1s_final[i]] for i in 1:length(x1s_final)]
 p2s = [[x2s_final[i], y2s_final[i]] for i in 1:length(x2s_final)]
 
 energy_traj(p1s, p2s, w1s_final, w2s_final, m1_opti, m2_opti, g)
+
+
+
