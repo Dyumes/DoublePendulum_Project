@@ -6,7 +6,7 @@
 
 include("accelerations.jl")
 
-function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
+function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2, w1, w2)
 
     #----PARAMETERS INITIALISATIONS
     #masses
@@ -36,13 +36,17 @@ function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
     θ1 = θ1#pi + 0.0204516 # #angle of the first pendulum
     θ2 = θ2#pi + 0.0934567##angle of the second pendulum
 
-    w1 = 0.0 #angular velocity of the first pendulum = dθ1/dt
-    w2 = 0.0 #angular velocity of the second pendulum = dθ2/dt
+    w1 = w1 #angular velocity of the first pendulum = dθ1/dt
+    w2 = w2 #angular velocity of the second pendulum = dθ2/dt
     #a1 = 0.0 #angular acceleration of the first pendulum = d^2θ1/dt^2
     #a2 = 0.0 #angular acceleration of the second pendulum = d^2θ2/dt^2
 
     θ1s = []
     θ2s = []
+
+    w1s = []
+    w2s = []
+
     while t < tmax
         accel = accelerations(θ1, w1, θ2, w2, m1, m2, l1, l2, g)
         a1 = accel[1]
@@ -55,6 +59,10 @@ function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
 
         θ1 += w1*dt
         θ2 += w2*dt
+
+        #normalization angles
+        θ1 = mod(θ1 + π, 2π) - π
+        θ2 = mod(θ2 + π, 2π) - π
 
         #cartesian coordinates recosntruction
         x1 = l1*sin(θ1)
@@ -74,12 +82,15 @@ function doublePendulumSim(m1, m2, l1, l2, tmax, θ1, θ2)
         push!(θ1s, θ1)
         push!(θ2s, θ2)
 
+        push!(w1s, w1)
+        push!(w2s, w2)
+
         t+= dt
     end
 
     #print(length(ts))
 
-    return ts, θ1s, θ2s, x1s, y1s, x2s, y2s
+    return ts, θ1s, θ2s, x1s, y1s, x2s, y2s, w1s, w2s
 
 
 end

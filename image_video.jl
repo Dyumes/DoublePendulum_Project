@@ -2,7 +2,7 @@
 # Double pendulum - Computer Physics 1
 # 2025
 # Description : Script to process video frames and create an animation of the double pendulum motion. The main goal
-# is to detect the positions of two masses in a video, to use these positions to analyze the motion of the double pendulum.
+# is to detect the positions of two masses in a video, to use these positions to compare with the simulations -> prediction + finding right masses.
 
 using GLMakie
 using FileIO
@@ -11,6 +11,8 @@ using GeometryBasics
 using Colors
 using ImageMorphology
 using Statistics
+
+import GLMakie: scatter!
 
 function video_analysis_and_animation(video_path::String, nbrOfFrames)
 
@@ -277,7 +279,7 @@ function video_analysis_and_animation(video_path::String, nbrOfFrames)
     println("saving animation...")
     nframes = min(length(m1_positions), length(frames))
 
-    @time record(fig, "pendulum_video_trajectories.mp4", 1:nframes;
+    @time record(fig, "videos/pendulum_video_trajectories.mp4", 1:nframes;
                 framerate=30) do i
         update_frame(i)
     end
@@ -352,9 +354,11 @@ function video_analysis_and_animation(video_path::String, nbrOfFrames)
 
     println("interactive vizualition ready.")
 
-    theta1s = []
-    theta2s = []
+    theta1s = Float64[]
+    theta2s = Float64[]
 
+
+    
     for i in 1:length(m1_positions)
         dx1 = m1_positions[i][1] - centre[1]
         dy1 = m1_positions[i][2] - centre[2]
@@ -367,5 +371,5 @@ function video_analysis_and_animation(video_path::String, nbrOfFrames)
         push!(theta2s, θ2)
     end
 
-    return m1_positions, m2_positions, centre, l1, l2, theta1s, theta2s
+    return frames, m1_positions, m2_positions, centre, l1, l2, theta1s, theta2s
 end
